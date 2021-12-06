@@ -1,14 +1,3 @@
-"use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-exports.__esModule = true;
 var colors = [
     "AliceBlue",
     "AntiqueWhite",
@@ -160,7 +149,8 @@ var colors = [
     "YellowGreen"
 ];
 var retry = 3;
-document.getElementById('iniciar').addEventListener('click', startGame);
+var myElement = document.getElementById('iniciar');
+myElement.addEventListener('click', startGame);
 var colorsRand = [];
 var colorAnswer = "";
 function TenColorsToSelect() {
@@ -168,7 +158,7 @@ function TenColorsToSelect() {
     for (var i = 0; i < 10; i++) {
         var index_1 = Math.floor(Math.random() * colors.length);
         colorsRand.push(colors[Math.floor((Math.random() * colors.length) + 1)].toLowerCase());
-        colorsRand = __spreadArray([], new Set(colorsRand), true);
+        colorsRand = Array.from(new Set(colorsRand));
         colorsRand.sort();
     }
     colorsRand.sort();
@@ -179,7 +169,11 @@ function startGame() {
     retry = 3;
     TenColorsToSelect();
     while (retry !== 0) {
-        var colortoChoice = prompt("Eu estou pensando em uma dessas cores:\n\n\"".concat(colorsRand.toString(), "\"\n\nQual cor eu estou pensando?\n\n Tentativas: ").concat(retry)).toLowerCase();
+        var colortoChoice = window.prompt("Eu estou pensando em uma dessas cores:\n\n\"".concat(colorsRand.toString(), "\"\n\nQual cor eu estou pensando?\n\n Tentativas: ").concat(retry));
+        if (colortoChoice == null) {
+            alert('Erro, parando aplicação');
+            break;
+        }
         if (colortoChoice.length == 0 || !colortoChoice.trim()) {
             alert('Digite uma cor,por favor');
         }
@@ -187,16 +181,20 @@ function startGame() {
             alert('Essa cor não está entre as dez cores');
         }
         else if (colortoChoice != colorAnswer) {
-            ComparisonString(colorAnswer, colortoChoice);
+            CompareString(colorAnswer, colortoChoice);
             retry--;
         }
         else if (colortoChoice == colorAnswer) {
             alert('Parabéns, você acertou');
             retry = 0;
         }
+        else {
+            alert('Erro,cancelando');
+        }
     }
+    alert("Fim do jogo");
 }
-function ComparisonString(choice, answer) {
+function CompareString(choice, answer) {
     if (answer.charCodeAt(0) > choice.charCodeAt(0)) {
         alert('É maior que pensei\n\ntente de novo!');
     }
